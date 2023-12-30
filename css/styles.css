@@ -1,0 +1,79 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  text-align: center;
+  padding: 10px;
+}
+
+.app-container {
+  background: white;
+  width: 80%;
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.input-container {
+  margin-bottom: 20px;
+}
+
+.input-field {
+  padding: 10px;
+  width: 70%;
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+.button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+}
+
+.todo-list li {
+  background: #f9f9f9;
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 5px;
+}
+
+.todo-list li button {
+  float: right;
+  margin-left: 10px;
+}
+
+.completed {
+  color: gray;
+  text-decoration: line-through;
+}
+
+.star-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 22px;
+  color: #ffd700; /* 금색 */
+  margin-left: 10px;
+}
+
+.star-button:hover {
+  color: #ffa500; /* 호버 시 오렌지색으로 변경 */
+}
+
+.star-button.checked {
+  color: #ffd700;
+}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Todo List</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body onload="fetchTodos()">
+    <div class="app-container">
+      <h1>My Todo List</h1>
+      <div class="input-container">
+        <input
+          type="text"
+          id="todoInput"
+          class="input-field"
+          placeholder="Enter todo item"
+        />
+        <button onclick="addTodo()" class="button">Add Todo</button>
+      </div>
+      <ul id="todoList" class="todo-list"></ul>
+    </div>
+    <script src="js/script.js"></script>
+  </body>
+</html>
