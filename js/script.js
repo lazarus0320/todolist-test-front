@@ -6,19 +6,31 @@ function addTodo() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ title: title }),
   })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
+    .then((response) =>
+      response.json().then((data) => {
+        if (!response.ok) {
+          handleError(response.status, data);
+          throw new Error('Request failed with status ' + response.status);
+        }
+        return data;
+      })
+    )
     .then((newTodo) => {
       addTodoToUI(newTodo);
-
-      todoInput.value = '';
-      todoInput.focus();
+      document.getElementById('todoInput').value = '';
+      document.getElementById('todoInput').focus();
     })
-    .catch((error) => console.error('Error:', error));
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+function handleError(status, data) {
+  if (status === 400) {
+    alert(data.message || 'Validation error');
+  } else {
+    console.error('Network response was not ok');
+  }
 }
 
 function fetchTodos() {
@@ -43,38 +55,44 @@ function deleteTodo(todoId) {
   })
     .then((response) => {
       if (!response.ok) {
-        throw new Error('Deletion failed');
+        return response.json().then((error) => {
+          throw new Error(error.message);
+        });
       }
       removeTodoFromUI(todoId);
     })
-    .catch((error) => console.error('Error:', error));
+    .catch((error) => {
+      console.error(error);
+    });
 }
 
 function editTodo(todoId) {
   const todoItem = document.getElementById(`todo-${todoId}`);
   const todoTitleElement = todoItem.querySelector('.content-container span');
-  const currentTitle = todoTitleElement ? todoTitleElement.textContent : '';
+  const currentTitle = todoTitleElement.textContent;
 
   const newTitle = prompt('Edit the title of the todo', currentTitle);
 
-  if (newTitle !== null && newTitle !== currentTitle) {
-    fetch(`http://localhost:8080/api/todos/items/${todoId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: newTitle }),
-    })
-      .then((response) => {
+  fetch(`http://localhost:8080/api/todos/items/${todoId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title: newTitle }),
+  })
+    .then((response) =>
+      response.json().then((data) => {
         if (!response.ok) {
-          throw new Error('Update failed');
+          handleError(response.status, data);
+          throw new Error('Request failed with status ' + response.status);
         }
-        return response.json();
+        return data;
       })
-      .then((updatedTodo) => {
-        updateTodoInUI(todoId, updatedTodo);
-      })
-      .catch((error) => console.error('Error:', error));
-  }
+    )
+    .then((updatedTodo) => {
+      updateTodoInUI(todoId, updatedTodo);
+    })
+    .catch((error) => console.error(error));
 }
+
 function toggleTodoCompletion(todoId) {
   fetch(`http://localhost:8080/api/todos/items/complete/${todoId}`, {
     method: 'PUT',
@@ -161,9 +179,7 @@ function addTodoToUI(todo) {
   todoItem.className = todo.completed ? 'completed' : '';
   todoItem.classList.add('todo-item');
 
-  todoItem.addEventListener('click', function () {
-    toggleTodoCompletion(todo.id);
-  });
+  todoItem.onclick = () => toggleTodoCompletion(todo.id);
 
   const starButtonContainer = createStarButtonContainer(todo);
   const contentContainer = createContentContainer(todo);
